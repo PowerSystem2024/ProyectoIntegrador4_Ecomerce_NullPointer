@@ -4,7 +4,7 @@ Proyecto Integrador del "Null Pointer". De la Tecnicatura Universitaria en Progr
 🧠 Nuestro equipo - Null Pointer
 El verdadero valor está en las personas detrás del código:
 
-👨‍💻 Cristian Gimenez
-Bestabé Gutierrez
-Santiago Martos
-Victoria Galdona
+- 👨‍💻 Cristian Gimenez
+- Bestabé Gutierrez
+- Santiago Martos
+- Victoria Galdona
