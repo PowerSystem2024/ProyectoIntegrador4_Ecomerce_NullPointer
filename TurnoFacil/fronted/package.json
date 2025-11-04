@@ -1,0 +1,21 @@
+{
+  "name": "turno-facil-frontend",
+  "version": "1.0.0",
+  "description": "Frontend para Turno Fácil - Sistema de Gestión Médica",
+  "main": "index.html",
+  "scripts": {
+    "dev": "python -m http.server 3000",
+    "build": "echo 'No build process needed for static site'",
+    "start": "python -m http.server 3000"
+  },
+  "keywords": [
+    "medical",
+    "appointments",
+    "healthcare",
+    "management"
+  ],
+  "author": "Turno Fácil Team",
+  "license": "MIT",
+  "devDependencies": {},
+  "dependencies": {}
+}

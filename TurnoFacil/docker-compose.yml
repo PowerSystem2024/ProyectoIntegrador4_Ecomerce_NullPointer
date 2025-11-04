@@ -1,0 +1,79 @@
+version: '3.8'
+
+services:
+  backend:
+    build: 
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - DEBUG=False
+      - SECRET_KEY=tu-clave-secreta-docker-2024
+      - DATABASE_URL=postgresql://turnofacil_user:turnofacil_password@db:5432/turnofacil_db
+      - MERCADOPAGO_ACCESS_TOKEN=TEST-ACCESS-TOKEN
+      - MERCADOPAGO_PUBLIC_KEY=TEST-PUBLIC-KEY
+      - FRONTEND_URL=http://localhost:3000
+      - BACKEND_URL=http://localhost:8000
+      - ALLOWED_HOSTS=localhost,127.0.0.1,backend
+    depends_on:
+      - db
+    volumes:
+      - ./backend:/app
+      - static_volume:/app/staticfiles
+    command: >
+      sh -c "python manage.py wait_for_db &&
+             python manage.py migrate &&
+             python manage.py collectstatic --noinput &&
+             python manage.py create_default_data &&
+             gunicorn turno_facil.wsgi:application --bind 0.0.0.0:8000 --workers 3"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/auth/user/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    environment:
+      - API_BASE_URL=http://localhost:8000/api
+    volumes:
+      - ./frontend:/usr/share/nginx/html
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:80"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  db:
+    image: postgres:13
+    environment:
+      - POSTGRES_DB=turnofacil_db
+      - POSTGRES_USER=turnofacil_user
+      - POSTGRES_PASSWORD=turnofacil_password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./backend/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U turnofacil_user -d turnofacil_db"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+volumes:
+  postgres_data:
+    driver: local
+  static_volume:
+    driver: local
+
+networks:
+  default:
+    name: turnofacil-network

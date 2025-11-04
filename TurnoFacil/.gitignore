@@ -1,0 +1,57 @@
+# Django
+*.pyc
+*_pycache_/
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Database
+*.sqlite3
+*.db
+
+# Static files
+/backend/staticfiles/
+/backend/media/
+
+# Environment variables
+.env
+*.env
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Coverage
+htmlcov/
+.coverage
+.coverage.*
+
+# Node (si se usa)
+node_modules/
+npm-debug.log*
+
+# Build
+/build/
+/dist/
+
+# Frontend assets cache
+/frontend/assets/cache/
+
+# Temporary files
+*.tmp
+*.temp

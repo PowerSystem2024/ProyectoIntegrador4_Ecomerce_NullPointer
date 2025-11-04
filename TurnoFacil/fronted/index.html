@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Turno Fácil - Sistema de Gestión Médica</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <script src="https://sdk.mercadopago.com/js/v2"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <span class="logo-icon">🏥</span>
+                    <h1>Turno Fácil</h1>
+                </div>
+                <nav id="main-nav">
+                    <ul>
+                        <li><a href="#" data-section="dashboard">Inicio</a></li>
+                        <li><a href="#" data-section="turnos">Turnos</a></li>
+                        <li><a href="#" data-section="historial">Historial</a></li>
+                        <li><a href="#" data-section="estudios">Estudios</a></li>
+                        <li><a href="#" data-section="facturas">Facturas</a></li>
+                        <li><a href="#" data-section="admin" id="admin-link" style="display:none;">Admin</a></li>
+                    </ul>
+                </nav>
+                <div class="user-actions">
+                    <span id="user-welcome" style="display:none; margin-right: 15px;"></span>
+                    <button class="btn btn-outline" id="login-btn">Iniciar Sesión</button>
+                    <button class="btn btn-primary" id="register-btn">Registrarse</button>
+                    <button class="btn btn-outline" id="logout-btn" style="display:none;">Cerrar Sesión</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="container">
+            <div id="content-section">
+                <!-- Contenido cargado dinámicamente -->
+            </div>
+        </div>
+    </main>
+
+    <div id="modal-container"></div>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Turno Fácil</h3>
+                    <p>Sistema de gestión médica sencillo y ágil para pacientes adultos.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Contacto</h3>
+                    <ul>
+                        <li>📞 +54 11 1234-5678</li>
+                        <li>✉ info@turnofacil.com</li>
+                        <li>📍 Av. Siempre Viva 742, Buenos Aires</li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Enlaces Rápidos</h3>
+                    <ul>
+                        <li><a href="#" data-section="turnos">Solicitar Turno</a></li>
+                        <li><a href="#" data-section="historial">Mi Historial</a></li>
+                        <li><a href="#" data-section="facturas">Facturas</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2024 Turno Fácil. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/app.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/turnos.js"></script>
+    <script src="js/pagos.js"></script>
+    <script src="js/admin.js"></script>
+    <script src="js/pdf-generator.js"></script>
+</body>
+</html>
+
+<script src="js/config.js"></script>
+
+<script src="js/app.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/turnos.js"></script>
+<script src="js/pagos.js"></script>
+<script src="js/admin.js"></script>
+<script src="js/pdf-generator.js"></script>
+
+<script src="js/mock-data.js"></script>
