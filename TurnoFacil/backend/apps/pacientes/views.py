@@ -2,12 +2,12 @@ from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from django.contrib.auth import authenticate, login, logout
-from .models import Paciente
-from .serializers import PacienteSerializer
+from apps.turnos.models import Usuario
+from apps.turnos.serializers import UsuarioSerializer
 
 class PacienteViewSet(viewsets.ModelViewSet):
-    queryset = Paciente.objects.all()
-    serializer_class = PacienteSerializer
+    queryset = Usuario.objects.all()
+    serializer_class = UsuarioSerializer
 
     @action(detail=False, methods=['post'])
     def register(self, request):

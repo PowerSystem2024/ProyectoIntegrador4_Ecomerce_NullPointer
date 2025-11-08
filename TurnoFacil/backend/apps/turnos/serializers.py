@@ -1,7 +1,7 @@
 # turnos/serializers.py
 from rest_framework import serializers
 from django.contrib.auth import authenticate
-from .models import Usuario, Medico, Turno, Pago
+from .models import Usuario, Medico, Turno
 
 class UsuarioSerializer(serializers.ModelSerializer):
     class Meta:

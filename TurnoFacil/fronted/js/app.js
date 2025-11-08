@@ -78,13 +78,13 @@ class TurnoFacilApp {
 
         safeAddEvent('login-btn', () => this.showLoginModal());
         safeAddEvent('register-btn', () => this.showRegisterModal());
-        safeAddEvent('logout-btn', () => this.logout());
+        safeAddEvent('logout-btn', () => window.authManager.logout());
     }
 
     async checkAuth() {
         try {
             console.log('🔐 Verificando autenticación...');
-            const response = await fetch('${CONFIG.API_BASE_URL}/auth/user/', {
+            const response = await fetch(`${window.CONFIG.API_BASE_URL}/auth/user/`, {
                 credentials: 'include'
             });
             

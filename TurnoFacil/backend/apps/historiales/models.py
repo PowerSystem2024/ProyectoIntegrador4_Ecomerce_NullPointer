@@ -1,9 +1,8 @@
 from django.db import models
-from apps.pacientes.models import Paciente
-from apps.turnos.models import Medico
+from apps.turnos.models import Usuario, Medico
 
 class HistorialMedico(models.Model):
-    paciente = models.ForeignKey(Paciente, on_delete=models.CASCADE)
+    paciente = models.ForeignKey(Usuario, on_delete=models.CASCADE)
     medico = models.ForeignKey(Medico, on_delete=models.CASCADE)
     fecha_consulta = models.DateTimeField()
     diagnostico = models.TextField()

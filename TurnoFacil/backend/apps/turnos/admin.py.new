@@ -1,0 +1,11 @@
+from django.contrib import admin
+from django.contrib.auth import get_user_model
+from .models import Medico, Turno
+
+# Obtener el modelo de Usuario personalizado
+User = get_user_model()
+
+# Registrar modelos
+admin.site.register(User)
+admin.site.register(Medico)
+admin.site.register(Turno)

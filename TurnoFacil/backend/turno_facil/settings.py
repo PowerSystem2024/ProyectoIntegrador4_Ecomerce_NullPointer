@@ -21,11 +21,14 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'corsheaders',
-    'apps.pacientes',
-    'apps.turnos',
-    'apps.pagos',
-    'apps.historiales',
+    'apps.turnos.apps.TurnosConfig',
+    'apps.pacientes.apps.PacientesConfig',
+    'apps.pagos.apps.PagosConfig',
+    'apps.historiales.apps.HistorialesConfig',
 ]
+
+# Configuración del modelo de usuario personalizado
+AUTH_USER_MODEL = 'turnos.Usuario'
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
@@ -102,11 +105,27 @@ MERCADOPAGO_PUBLIC_KEY = os.getenv('MERCADOPAGO_PUBLIC_KEY', 'TEST-PUBLIC-KEY')
 FRONTEND_URL = os.getenv('FRONTEND_URL', 'http://localhost:3000')
 BACKEND_URL = os.getenv('BACKEND_URL', 'http://localhost:8000')
 
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
-    "http://127.0.0.1:3000",
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_METHODS = [
+    'DELETE',
+    'GET',
+    'OPTIONS',
+    'PATCH',
+    'POST',
+    'PUT',
 ]
-CORS_ALLOW_ALL_ORIGINS = DEBUG
+CORS_ALLOW_HEADERS = [
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
+]
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
@@ -116,5 +135,3 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.AllowAny',
     ],
 }
-
-AUTH_USER_MODEL = 'pacientes.Paciente'

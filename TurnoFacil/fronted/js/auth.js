@@ -129,7 +129,7 @@ class AuthManager {
         const password = passwordInput.value;
 
         try {
-            const response = await fetch('${CONFIG.API_BASE_URL}/auth/login/', {
+            const response = await fetch(`${window.CONFIG.API_BASE_URL}/auth/login/`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -174,7 +174,7 @@ class AuthManager {
         };
 
         try {
-            const response = await fetch('${CONFIG.API_BASE_URL}/auth/register/', {
+            const response = await fetch(`${window.CONFIG.API_BASE_URL}/auth/register/`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -202,7 +202,7 @@ class AuthManager {
 
     async logout() {
         try {
-            const response = await fetch('${CONFIG.API_BASE_URL}/auth/logout/', {
+            const response = await fetch(`${window.CONFIG.API_BASE_URL}/auth/logout/`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -212,12 +212,27 @@ class AuthManager {
             });
 
             if (response.ok) {
+                // Actualizar estado de la aplicación
                 app.setCurrentUser(null);
+                
+                // Actualizar interfaz
+                const loginBtn = document.getElementById('login-btn');
+                const registerBtn = document.getElementById('register-btn');
+                const logoutBtn = document.getElementById('logout-btn');
+                const userWelcome = document.getElementById('user-welcome');
+                
+                if (loginBtn) loginBtn.style.display = 'inline-block';
+                if (registerBtn) registerBtn.style.display = 'inline-block';
+                if (logoutBtn) logoutBtn.style.display = 'none';
+                if (userWelcome) userWelcome.style.display = 'none';
+                
+                // Recargar la sección actual
                 app.loadSection('dashboard');
                 this.showMessage('success', 'Sesión cerrada exitosamente');
             }
         } catch (error) {
             console.error('Error:', error);
+            this.showMessage('error', 'Error al cerrar sesión');
         }
     }
 

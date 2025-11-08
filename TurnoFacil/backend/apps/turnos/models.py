@@ -47,21 +47,4 @@ class Turno(models.Model):
     def _str_(self):
         return f"Turno {self.id} - {self.paciente} con {self.medico}"
 
-class Pago(models.Model):
-    ESTADOS_PAGO = [
-        ('pendiente', 'Pendiente'),
-        ('aprobado', 'Aprobado'),
-        ('rechazado', 'Rechazado'),
-        ('cancelado', 'Cancelado'),
-    ]
-    
-    turno = models.OneToOneField(Turno, on_delete=models.CASCADE)
-    monto = models.DecimalField(max_digits=10, decimal_places=2)
-    estado = models.CharField(max_length=20, choices=ESTADOS_PAGO, default='pendiente')
-    id_transaccion = models.CharField(max_length=100, blank=True)
-    fecha_pago = models.DateTimeField(null=True, blank=True)
-    metodo_pago = models.CharField(max_length=50, blank=True)
-    creado_en = models.DateTimeField(auto_now_add=True)
-    
-    def _str_(self):
-        return f"Pago {self.id} - Turno {self.turno.id}"
+# El modelo Pago se encuentra en la app pagos

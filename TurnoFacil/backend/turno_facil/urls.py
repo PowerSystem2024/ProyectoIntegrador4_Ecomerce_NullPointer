@@ -5,8 +5,8 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('api/auth/', include('apps.pacientes.urls')),
+    path('admin/', admin.site.urls),  # Mantener admin/ como primera URL
+    path('api/auth/', include('apps.pacientes.urls')),  # Mover autenticación a app pacientes
     path('api/turnos/', include('apps.turnos.urls')),
     path('api/pagos/', include('apps.pagos.urls')),
     path('api/historiales/', include('apps.historiales.urls')),

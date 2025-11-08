@@ -162,9 +162,15 @@ class TurnosManager {
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="appointment-medico">Médico</label>
-                            <select id="appointment-medico" class="form-control" required>
-                                <option value="">Seleccione un médico</option>
+                            <label for="appointment-specialty">Medico</label>
+                            <select id="appointment-specialty" class="form-control" required>
+                                <option value="">Seleccione un medico</option>
+                                <option value="Cardiología">Dr. Ramirez</option>
+                                <option value="Dermatología">Dra. Gomez</option>
+                                <option value="Odontología">Dr. Perez</option>
+                                <option value="Pediatría">Dra. Lopez</option>
+                                <option value="Ginecología">Dra. Martinez</option>
+                                <option value="Clínica Médica">Dr. Fernandez</option>
                             </select>
                         </div>
                         <div class="form-group">

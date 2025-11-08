@@ -43,7 +43,7 @@ class DashboardManager {
             const quickAppointmentBtn = document.getElementById('quick-appointment-btn');
             const welcomeLoginBtn = document.getElementById('welcome-login-btn');
 
-            if (welcomeTitle) welcomeTitle.textContent = 'Hola, ${app.currentUser.first_name}!';
+            if (welcomeTitle) welcomeTitle.textContent = `¡Hola, ${app.currentUser.first_name}!`;
             if (welcomeDescription) welcomeDescription.textContent = 'Gestiona tus turnos médicos de forma rápida y sencilla.';
             if (welcomeRegisterBtn) welcomeRegisterBtn.style.display = 'none';
             if (quickAppointmentBtn) quickAppointmentBtn.style.display = 'inline-block';

@@ -46,6 +46,7 @@ class MedicoViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = [AllowAny]
 
 class TurnoViewSet(viewsets.ModelViewSet):
+    queryset = Turno.objects.all()
     serializer_class = TurnoSerializer
     permission_classes = [IsAuthenticated]
     
