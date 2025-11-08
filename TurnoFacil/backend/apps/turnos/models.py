@@ -9,7 +9,7 @@ class Usuario(AbstractUser):
     fecha_nacimiento = models.DateField(null=True, blank=True)
     direccion = models.TextField(blank=True, null=True)
     
-    def _str_(self):
+    def __str__(self):
         return f"{self.first_name} {self.last_name}"
 
 class Medico(models.Model):
@@ -20,7 +20,7 @@ class Medico(models.Model):
     telefono_consultorio = models.CharField(max_length=20)
     horario_atencion = models.CharField(max_length=100, default="Lunes a Viernes 8:00-17:00")
     
-    def _str_(self):
+    def __str__(self):
         return f"Dr. {self.usuario.first_name} {self.usuario.last_name} - {self.especialidad}"
 
 class Turno(models.Model):
@@ -44,7 +44,7 @@ class Turno(models.Model):
     class Meta:
         ordering = ['fecha', 'hora']
     
-    def _str_(self):
+    def __str__(self):
         return f"Turno {self.id} - {self.paciente} con {self.medico}"
 
 # El modelo Pago se encuentra en la app pagos

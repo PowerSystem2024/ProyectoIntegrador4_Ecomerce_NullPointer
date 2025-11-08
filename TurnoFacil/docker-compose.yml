@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   backend:
     build: 
@@ -16,11 +14,19 @@ services:
       - BACKEND_URL=http://localhost:8000
       - ALLOWED_HOSTS=localhost,127.0.0.1,backend,*
       - CORS_ALLOW_ALL_ORIGINS=True
+      - POSTGRES_DB=turnofacil_db
+      - POSTGRES_USER=turnofacil_user
+      - POSTGRES_PASSWORD=turnofacil_password
+      - DB_HOST=db
+      - DB_PORT=5432
     volumes:
       - ./backend:/app
       - static_volume:/app/staticfiles
+    depends_on:
+      - db
     command: >
-      sh -c "python manage.py migrate &&
+      sh -c "sleep 10 &&
+             python manage.py migrate &&
              python manage.py runserver 0.0.0.0:8000"
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/api/auth/user/"]

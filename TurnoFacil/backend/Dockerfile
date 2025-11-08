@@ -37,20 +37,30 @@ done\n\
 echo "Database is ready!"' > /app/wait_for_db.sh && chmod +x /app/wait_for_db.sh
 
 # Create management command for waiting database
-RUN echo 'from django.core.management.base import BaseCommand\n\
-import subprocess\n\
-import sys\n\
+RUN mkdir -p /app/apps/management/commands && \
+    touch /app/apps/management/__init__.py && \
+    touch /app/apps/management/commands/__init__.py && \
+    echo 'from django.core.management.base import BaseCommand\n\
+from django.db import connections\n\
+from django.db.utils import OperationalError\n\
+import time\n\
 \n\
 class Command(BaseCommand):\n\
     help = "Wait for database to be ready"\n\
 \n\
     def handle(self, *args, **options):\n\
         self.stdout.write("Waiting for database...")\n\
-        result = subprocess.run(["/app/wait_for_db.sh"], capture_output=True, text=True)\n\
-        if result.returncode != 0:\n\
-            self.stderr.write("Database is not ready!")\n\
-            sys.exit(1)\n\
-        self.stdout.write("Database is ready!")' > /app/apps/management/commands/wait_for_db.py
+        db_conn = None\n\
+        while not db_conn:\n\
+            try:\n\
+                db_conn = connections["default"]\n\
+                db_conn.cursor()\n\
+                self.stdout.write(\n\
+                    self.style.SUCCESS("Database available!")\n\
+                )\n\
+            except OperationalError:\n\
+                self.stdout.write("Database unavailable, waiting 1 second...")\n\
+                time.sleep(1)' > /app/apps/management/commands/wait_for_db.py
 
 # Create default data command
 RUN echo 'from django.core.management.base import BaseCommand\n\
