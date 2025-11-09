@@ -39,7 +39,7 @@ class TurnosManager {
 
     async getUserTurnos() {
         try {
-            const response = await fetch('${CONFIG.API_BASE_URL}/turnos/turnos/', {
+            const response = await fetch(`${CONFIG.API_BASE_URL}/turnos/turnos/`, {
                 credentials: 'include'
             });
             
@@ -162,15 +162,10 @@ class TurnosManager {
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="appointment-specialty">Medico</label>
-                            <select id="appointment-specialty" class="form-control" required>
-                                <option value="">Seleccione un medico</option>
-                                <option value="Cardiología">Dr. Ramirez</option>
-                                <option value="Dermatología">Dra. Gomez</option>
-                                <option value="Odontología">Dr. Perez</option>
-                                <option value="Pediatría">Dra. Lopez</option>
-                                <option value="Ginecología">Dra. Martinez</option>
-                                <option value="Clínica Médica">Dr. Fernandez</option>
+                            <label for="appointment-medico">Médico</label>
+                            <select id="appointment-medico" class="form-control" required>
+                                <option value="">Seleccione un médico</option>
+                                ${this.populateMedicosOptions()}
                             </select>
                         </div>
                         <div class="form-group">
@@ -223,7 +218,7 @@ class TurnosManager {
 
     async loadMedicos() {
         try {
-            const response = await fetch('${CONFIG.API_BASE_URL}/turnos/medicos/', {
+            const response = await fetch(`${CONFIG.API_BASE_URL}/turnos/medicos/`, {
                 credentials: 'include'
             });
             
@@ -270,6 +265,18 @@ class TurnosManager {
         medicoSelect.value = '';
     }
 
+    populateMedicosOptions() {
+        if (!this.medicos || this.medicos.length === 0) {
+            return '<option value="">No hay médicos disponibles</option>';
+        }
+        
+        return this.medicos.map(medico => 
+            `<option value="${medico.id}" data-especialidad="${medico.especialidad}">
+                Dr. ${medico.nombre} ${medico.apellido} - ${medico.especialidad}
+            </option>`
+        ).join('');
+    }
+
     generateTimeSlots() {
         const slots = [];
         for (let hour = 8; hour <= 18; hour++) {
@@ -313,7 +320,7 @@ class TurnosManager {
         }
 
         try {
-            const response = await fetch('${CONFIG.API_BASE_URL}/turnos/turnos/', {
+            const response = await fetch(`${CONFIG.API_BASE_URL}/turnos/turnos/`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -362,7 +369,7 @@ class TurnosManager {
     async cancelarTurno(turnoId) {
         if (confirm('¿Está seguro que desea cancelar este turno?')) {
             try {
-                const response = await fetch('${CONFIG.API_BASE_URL}/turnos/turnos/${turnoId}/', {
+                const response = await fetch(`${CONFIG.API_BASE_URL}/turnos/turnos/${turnoId}/`, {
                     method: 'DELETE',
                     headers: {
                         'X-CSRFToken': this.getCSRFToken()

@@ -115,7 +115,7 @@ class AdminManager {
 
     async loadPacientes() {
         try {
-            const response = await fetch('${CONFIG.API_BASE_URL}/auth/', {
+            const response = await fetch(`${CONFIG.API_BASE_URL}/auth/`, {
                 credentials: 'include'
             });
             
@@ -129,7 +129,7 @@ class AdminManager {
 
     async loadTurnosAdmin() {
         try {
-            const response = await fetch('${CONFIG.API_BASE_URL}/turnos/turnos/', {
+            const response = await fetch(`${CONFIG.API_BASE_URL}/turnos/turnos/`, {
                 credentials: 'include'
             });
             
@@ -188,7 +188,7 @@ class AdminManager {
 
     editTurno(turnoId) {
         // Método placeholder
-        alert(Editar turno ${turnoId} - Funcionalidad en desarrollo);
+        alert(`Editar turno ${turnoId} - Funcionalidad en desarrollo`);
     }
 }
 

@@ -14,7 +14,7 @@ class PaymentManager {
 
     async initializePayment(turnoId) {
         try {
-            const response = await fetch('${CONFIG.API_BASE_URL}/pagos/crear_pago_turno/', {
+            const response = await fetch(`${CONFIG.API_BASE_URL}/pagos/crear_pago_turno/`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -122,7 +122,7 @@ class PaymentManager {
 
     async generateComprobante(turnoId) {
         try {
-            const response = await fetch('${CONFIG.API_BASE_URL}/turnos/turnos/${turnoId}/comprobante/', {
+            const response = await fetch(`${CONFIG.API_BASE_URL}/turnos/turnos/${turnoId}/comprobante/`, {
                 credentials: 'include'
             });
             const data = await response.json();
