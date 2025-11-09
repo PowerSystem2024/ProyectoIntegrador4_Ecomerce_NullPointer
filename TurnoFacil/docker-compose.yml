@@ -69,10 +69,24 @@ services:
       timeout: 10s
       retries: 5
 
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@turnofacil.com
+      - PGADMIN_DEFAULT_PASSWORD=admin123
+    ports:
+      - "5050:80"
+    depends_on:
+      - db
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+
 volumes:
   postgres_data:
     driver: local
   static_volume:
+    driver: local
+  pgadmin_data:
     driver: local
 
 networks:

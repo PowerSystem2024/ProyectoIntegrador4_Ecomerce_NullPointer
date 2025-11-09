@@ -36,7 +36,18 @@ class TurnoFacilApp {
             console.log('🔄 Inicialización segura...');
             this.setupEventListeners();
             this.loadSection('dashboard');
-            this.checkAuth();
+            // Ensure CSRF cookie is set for subsequent POST requests from the frontend
+            try {
+                fetch(`${window.CONFIG.API_BASE_URL}/auth/csrf/`, { credentials: 'include' })
+                    .then(() => this.checkAuth())
+                    .catch((err) => {
+                        console.warn('No se pudo obtener CSRF cookie (frontend).', err);
+                        this.checkAuth();
+                    });
+            } catch (err) {
+                console.warn('Error solicitando CSRF:', err);
+                this.checkAuth();
+            }
         } catch (error) {
             console.error('❌ Error en inicialización:', error);
             this.showErrorUI();
