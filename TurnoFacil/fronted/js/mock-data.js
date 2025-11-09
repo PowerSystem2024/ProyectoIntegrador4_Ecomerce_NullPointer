@@ -70,7 +70,7 @@ window.MOCK_DATA = {
     turnos: [
         {
             id: 1,
-            paciente_first_name: "Juan",
+            paciente_first_name: "Cristian",
             paciente_last_name: "Pérez",
             paciente_dni: "30123456",
             medico_nombre: "Dr. Carlos Gómez",
@@ -86,7 +86,7 @@ window.MOCK_DATA = {
         },
         {
             id: 2,
-            paciente_first_name: "Juan", 
+            paciente_first_name: "Cristian", 
             paciente_last_name: "Pérez",
             paciente_dni: "30123456",
             medico_nombre: "Dra. Ana López",
@@ -121,9 +121,9 @@ window.MOCK_DATA = {
         {
             id: 1,
             dni: "30123456",
-            first_name: "Juan",
+            first_name: "Cristian",
             last_name: "Pérez",
-            email: "juan.perez@email.com",
+            email: "cristian.perez@email.com",
             telefono: "+54 11 1234-5678",
             date_joined: "2024-01-01T10:00:00Z"
         },
@@ -177,9 +177,9 @@ window.mockFetch = async (url, options = {}) => {
             const mockUser = {
                 id: 1,
                 username: body.username,
-                first_name: "Juan",
+                first_name: "Cristian",
                 last_name: "Pérez", 
-                email: "juan@example.com",
+                email: "cristian@example.com",
                 dni: "30123456",
                 is_staff: body.username === 'admin'
             };
@@ -248,15 +248,22 @@ window.mockFetch = async (url, options = {}) => {
         if (options.method === 'POST') {
             // Crear nuevo turno
             const turnoData = JSON.parse(options.body);
+            
+            // Buscar el médico seleccionado por ID
+            const medicoSeleccionado = MOCK_DATA.medicos.find(medico => medico.id == turnoData.medico);
+            const nombreMedico = medicoSeleccionado 
+                ? `Dr. ${medicoSeleccionado.nombre} ${medicoSeleccionado.apellido}`
+                : "Médico No Encontrado";
+            
             const nuevoTurno = {
                 id: Date.now(),
                 paciente_first_name: "Usuario",
                 paciente_last_name: "Nuevo",
-                medico_nombre: "Médico Seleccionado",
-                especialidad: turnoData.especialidad || "General",
+                medico_nombre: nombreMedico,
+                especialidad: medicoSeleccionado ? medicoSeleccionado.especialidad : "General",
                 fecha: turnoData.fecha,
                 hora: turnoData.hora,
-                direccion: "Consultorio Principal",
+                direccion: medicoSeleccionado ? medicoSeleccionado.direccion : "Consultorio Principal",
                 motivo: turnoData.motivo || "Consulta médica",
                 estado: "pendiente",
                 monto: 2000

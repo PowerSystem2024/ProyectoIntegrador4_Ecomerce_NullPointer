@@ -2,7 +2,7 @@ import mercadopago
 from django.conf import settings
 
 class MercadoPagoService:
-    def _init_(self):
+    def __init__(self):
         self.sdk = mercadopago.SDK(settings.MERCADOPAGO_ACCESS_TOKEN)
 
     def crear_preferencia_pago(self, turno_id, monto, descripcion):

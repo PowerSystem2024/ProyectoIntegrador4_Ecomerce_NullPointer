@@ -9,7 +9,7 @@ if (typeof CONFIG === 'undefined') {
         API_BASE_URL: window.location.hostname === 'localhost' 
             ? 'http://localhost:8000/api' 
             : '/api',
-        MERCADOPAGO_PUBLIC_KEY: 'TEST-8b628a6f-0c9f-4d4f-9e6a-2d4b7a8c1d3a'
+        MERCADOPAGO_PUBLIC_KEY: 'APP_USR-aaf87840-bb69-4343-8b1e-f8a49c92a770'
     };
     console.log('✅ CONFIG definido por defecto:', window.CONFIG);
 } else {
@@ -137,7 +137,7 @@ class TurnoFacilApp {
             // Actualizar texto de bienvenida
             const welcome = document.getElementById('user-welcome');
             if (welcome && this.currentUser) {
-                welcome.textContent = 'Hola, ${this.currentUser.first_name}';
+                welcome.textContent = '';
             }
         } catch (error) {
             console.error('Error actualizando UI:', error);
@@ -233,7 +233,7 @@ class TurnoFacilApp {
 
         return `
             <section class="welcome-section">
-                <h2>Hola, ${this.currentUser.first_name}!</h2>
+                <h2>Bienvenido!</h2>
                 <p>Gestiona tus turnos médicos de forma rápida y sencilla.</p>
                 <button class="btn btn-primary" id="quick-turno">Solicitar Turno</button>
             </section>

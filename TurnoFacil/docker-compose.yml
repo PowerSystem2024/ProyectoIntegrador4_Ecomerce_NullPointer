@@ -8,8 +8,8 @@ services:
     environment:
       - DEBUG=True
       - SECRET_KEY=tu-clave-secreta-docker-2024
-      - MERCADOPAGO_ACCESS_TOKEN=TEST-ACCESS-TOKEN
-      - MERCADOPAGO_PUBLIC_KEY=TEST-PUBLIC-KEY
+      - MERCADOPAGO_ACCESS_TOKEN=APP_USR-4443132160940317-110913-d124666811020fa637f8889cdc59e5ca-2705622945
+      - MERCADOPAGO_PUBLIC_KEY=APP_USR-aaf87840-bb69-4343-8b1e-f8a49c92a770
       - FRONTEND_URL=http://localhost:80
       - BACKEND_URL=http://localhost:8000
       - ALLOWED_HOSTS=localhost,127.0.0.1,backend,*
