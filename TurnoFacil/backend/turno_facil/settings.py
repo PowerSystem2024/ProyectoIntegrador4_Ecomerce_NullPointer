@@ -1,6 +1,7 @@
 import os
 from pathlib import Path
 from dotenv import load_dotenv
+import dj_database_url
 
 load_dotenv()
 
@@ -10,7 +11,16 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-default-key-for-dev')
 
 DEBUG = os.getenv('DEBUG', 'True') == 'True'
 
+# Railway y producción
+RAILWAY_ENVIRONMENT = os.getenv('RAILWAY_ENVIRONMENT_NAME')
+if RAILWAY_ENVIRONMENT:
+    DEBUG = False
+
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
+
+# Para Railway - permitir todos los hosts en producción
+if not DEBUG:
+    ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
