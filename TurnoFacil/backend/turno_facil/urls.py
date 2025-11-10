@@ -19,34 +19,40 @@ def set_csrf(request):
 
 def frontend_view(request):
     """Serve the frontend HTML with corrected paths"""
-    frontend_path = os.path.join(settings.BASE_DIR, '../fronted/index.html')
+    frontend_path = os.path.join(settings.BASE_DIR, 'static', 'index.html')
+    # Fallback a la ubicación original
+    if not os.path.exists(frontend_path):
+        frontend_path = os.path.join(settings.BASE_DIR, '../fronted/index.html')
+        
     try:
         with open(frontend_path, 'r', encoding='utf-8') as f:
             content = f.read()
         
         # Obtener base URL del request
-        base_url = request.build_absolute_uri('/')
+        base_url = request.build_absolute_uri('/').rstrip('/')
         
         # Reemplazar URLs de desarrollo con URLs de producción
-        content = content.replace('http://localhost:8000/api', f'{base_url}api')
+        content = content.replace('http://localhost:8000/api', f'{base_url}/api')
         content = content.replace('http://localhost:8000', base_url)
-        content = content.replace('http://localhost/api', f'{base_url}api')
+        content = content.replace('http://localhost/api', f'{base_url}/api')
         content = content.replace('http://localhost', base_url)
         
-        # Asegurar que las rutas de CSS y JS sean relativas/absolutas correctas
-        content = content.replace('href="css/', f'href="{base_url}css/')
-        content = content.replace('src="js/', f'src="{base_url}js/')
-        content = content.replace('src="assets/', f'src="{base_url}assets/')
+        # Usar URLs de archivos estáticos de Django
+        content = content.replace('href="css/', f'href="{base_url}/static/css/')
+        content = content.replace('src="js/', f'src="{base_url}/static/js/')
+        content = content.replace('src="assets/', f'src="{base_url}/static/assets/')
+        content = content.replace('<script src="https://sdk.mercadopago.com', '<script src="https://sdk.mercadopago.com')
         
         from django.http import HttpResponse
         return HttpResponse(content, content_type='text/html')
         
     except FileNotFoundError:
         return JsonResponse({
-            "message": "Turno Fácil API",
+            "message": "Turno Fácil API - Frontend not found",
             "version": "1.0.0", 
             "status": "running",
-            "note": "Frontend not found. API endpoints available below.",
+            "frontend_path_tried": [frontend_path],
+            "note": "Frontend files not found. API endpoints available below.",
             "endpoints": {
                 "admin": "/admin/",
                 "auth": "/api/auth/",
@@ -76,19 +82,20 @@ def api_root(request):
     })
 
 urlpatterns = [
-    path('admin/', admin.site.urls),  # Mantener admin/ como primera URL
-    path('api/auth/', include('apps.pacientes.urls')),  # Mover autenticación a app pacientes
+    path('admin/', admin.site.urls),  
+    path('api/auth/', include('apps.pacientes.urls')),  
     path('api/turnos/', include('apps.turnos.urls')),
     path('api/pagos/', include('apps.pagos.urls')),
     path('api/historiales/', include('apps.historiales.urls')),
     path('api/', api_root, name='api_root'),
     path('api/auth/csrf/', set_csrf),
-    path('', frontend_view, name='frontend'),  # Servir frontend en la raíz
+    path('', frontend_view, name='frontend'),  
 ]
 
-# Servir archivos estáticos y media en producción
-if not settings.DEBUG or True:  # Siempre servir en producción
-    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
-    urlpatterns += static('/css/', document_root=os.path.join(settings.BASE_DIR, '../fronted/css'))
-    urlpatterns += static('/js/', document_root=os.path.join(settings.BASE_DIR, '../fronted/js'))
-    urlpatterns += static('/assets/', document_root=os.path.join(settings.BASE_DIR, '../fronted/assets'))
+# Servir archivos estáticos siempre (desarrollo y producción)
+urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+
+if settings.DEBUG:
+    # En desarrollo también servir desde STATICFILES_DIRS
+    from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+    urlpatterns += staticfiles_urlpatterns()
