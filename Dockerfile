@@ -12,8 +12,12 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY TurnoFacil/backend/ .
 
-# Copiar frontend al directorio static
+# Copiar frontend manteniendo la estructura de directorios
+RUN mkdir -p /app/static
 COPY TurnoFacil/fronted/ /app/static/
+
+# Verificar que los archivos se copiaron correctamente
+RUN ls -la /app/static/ && ls -la /app/static/css/ || echo "CSS directory not found"
 
 RUN mkdir -p /app/staticfiles
 

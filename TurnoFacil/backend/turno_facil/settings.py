@@ -126,13 +126,14 @@ STATICFILES_DIRS = [
     BASE_DIR / 'static',  # Donde copiamos los archivos del frontend durante build
 ]
 
-# Configuración de WhiteNoise para producción
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-WHITENOISE_USE_FINDERS = True
-WHITENOISE_AUTOREFRESH = True
+# Configuración de WhiteNoise para producción - Simplificada
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 
-# En producción, deshabilitar el almacenamiento comprimido si da problemas
+# Asegurar que WhiteNoise sirva todos los archivos estáticos correctamente
 if not DEBUG:
+    WHITENOISE_USE_FINDERS = True
+    WHITENOISE_AUTOREFRESH = True
+    # Usar almacenamiento sin compresión en Railway para evitar problemas
     STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

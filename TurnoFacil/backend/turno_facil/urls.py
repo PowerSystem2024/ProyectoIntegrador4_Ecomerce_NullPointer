@@ -95,6 +95,11 @@ urlpatterns = [
 # Servir archivos estáticos siempre (desarrollo y producción)
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
+# También servir desde STATICFILES_DIRS
+if hasattr(settings, 'STATICFILES_DIRS'):
+    for static_dir in settings.STATICFILES_DIRS:
+        urlpatterns += static(settings.STATIC_URL, document_root=static_dir)
+
 if settings.DEBUG:
     # En desarrollo también servir desde STATICFILES_DIRS
     from django.contrib.staticfiles.urls import staticfiles_urlpatterns
