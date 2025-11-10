@@ -1,5 +1,12 @@
 #!/bin/bash
-# Script de build para Railway
+# Build script para Render
+echo "🔧 Starting build process..."
+
+echo "📦 Installing Python dependencies..."
 cd backend
 pip install -r requirements.txt
-python manage.py collectstatic --noinput || echo "No static files"
+
+echo "📁 Collecting static files..."
+python manage.py collectstatic --noinput --clear
+
+echo "✅ Build completed successfully!"
