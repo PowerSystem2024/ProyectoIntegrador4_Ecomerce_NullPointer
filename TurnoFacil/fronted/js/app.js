@@ -446,6 +446,15 @@ class TurnoFacilApp {
 console.log('🎯 Creando aplicación...');
 try {
     window.app = new TurnoFacilApp();
+    
+    // Inicializar PaymentManager
+    if (typeof PaymentManager !== 'undefined') {
+        window.paymentManager = new PaymentManager();
+        console.log('✅ PaymentManager inicializado');
+    } else {
+        console.warn('⚠ PaymentManager no disponible');
+    }
+    
     console.log('✅ Aplicación creada correctamente');
 } catch (error) {
     console.error('💥 Error crítico:', error);

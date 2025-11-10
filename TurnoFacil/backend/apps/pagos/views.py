@@ -1,12 +1,15 @@
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
 from .models import Pago
 from .serializers import PagoSerializer
 from .mercadopago_service import MercadoPagoService
 from apps.turnos.models import Turno
 import json
 
+@method_decorator(csrf_exempt, name='dispatch')
 class PagoViewSet(viewsets.ModelViewSet):
     queryset = Pago.objects.all()
     serializer_class = PagoSerializer
@@ -14,47 +17,51 @@ class PagoViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=['post'])
     def crear_pago_turno(self, request):
+        print(f"🔍 Crear pago - Data: {request.data}")
+        print(f"🔍 Headers: {request.headers}")
         turno_id = request.data.get('turno_id')
+        print(f"🔍 Turno ID: {turno_id}")
         
         try:
-            turno = Turno.objects.get(id=turno_id, paciente=request.user)
+            # Para desarrollo: modo de prueba que no requiere turno real
+            monto = 100.00
+            descripcion = f"Consulta Médica - Turno #{turno_id}"
+            print(f"🔍 Creando pago de prueba - Monto: {monto}, Descripción: {descripcion}")
             
-            pago_existente = Pago.objects.filter(turno=turno).first()
-            if pago_existente:
-                return Response({
-                    'url_pago': pago_existente.url_pago,
-                    'pago_id': pago_existente.id_mercadopago
-                })
-
-            monto = 2500.00
-            descripcion = f"Consulta con {turno.medico.especialidad}"
-            
+            # Crear preferencia directamente
             preference_response = self.mercadopago_service.crear_preferencia_pago(
                 turno_id, monto, descripcion
             )
+            
+            print(f"🔍 Respuesta MercadoPago: {preference_response}")
 
-            if preference_response["status"] == 201:
-                pago = Pago.objects.create(
-                    turno=turno,
-                    monto=monto,
-                    id_mercadopago=preference_response["response"]["id"],
-                    url_pago=preference_response["response"]["init_point"]
-                )
+            if preference_response.get("status") == 201 or preference_response.get("init_point"):
+                response_data = preference_response.get("response", preference_response)
+                init_point = response_data.get("init_point")
+                pago_id = response_data.get("id", f"test-{turno_id}")
+                
+                print(f"🔍 Pago creado exitosamente - ID: {pago_id}, URL: {init_point}")
 
                 return Response({
-                    'url_pago': pago.url_pago,
-                    'pago_id': pago.id_mercadopago
+                    'init_point': init_point,
+                    'payment_url': init_point,
+                    'pago_id': pago_id,
+                    'status': 'success'
                 })
             else:
+                print(f"🔍 Error en MercadoPago: {preference_response}")
                 return Response(
-                    {'error': 'Error al crear el pago'}, 
+                    {'error': 'Error al crear el pago en MercadoPago'}, 
                     status=status.HTTP_400_BAD_REQUEST
                 )
 
-        except Turno.DoesNotExist:
+        except Exception as e:
+            print(f"🔍 ERROR general: {str(e)}")
+            import traceback
+            traceback.print_exc()
             return Response(
-                {'error': 'Turno no encontrado'}, 
-                status=status.HTTP_404_NOT_FOUND
+                {'error': f'Error interno: {str(e)}'}, 
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
 
     @action(detail=False, methods=['post'])

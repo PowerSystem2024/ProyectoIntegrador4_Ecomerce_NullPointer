@@ -25,6 +25,7 @@ INSTALLED_APPS = [
     'apps.pacientes.apps.PacientesConfig',
     'apps.pagos.apps.PagosConfig',
     'apps.historiales.apps.HistorialesConfig',
+    'apps.management.apps.ManagementConfig',
 ]
 
 # Configuración del modelo de usuario personalizado

@@ -75,14 +75,14 @@ window.MOCK_DATA = {
             paciente_dni: "30123456",
             medico_nombre: "Dr. Carlos Gómez",
             especialidad: "Cardiología",
-            fecha: "2024-01-15",
+            fecha: "2024-12-15",
             hora: "10:00",
             direccion: "Av. Corrientes 1234, CABA",
             motivo: "Control cardíaco anual",
-            estado: "confirmado",
-            monto: 2500,
-            fecha_pago: "2024-01-10",
-            id_transaccion: "MP-123456789"
+            estado: "pendiente",
+            monto: 100,
+            fecha_pago: null,
+            id_transaccion: null
         },
         {
             id: 2,
@@ -91,12 +91,62 @@ window.MOCK_DATA = {
             paciente_dni: "30123456",
             medico_nombre: "Dra. Ana López",
             especialidad: "Dermatología",
-            fecha: "2024-01-20",
+            fecha: "2024-12-20",
             hora: "15:30",
             direccion: "Av. Santa Fe 567, CABA",
             motivo: "Consulta por dermatitis",
             estado: "pendiente",
-            monto: 2000
+            monto: 100,
+            fecha_pago: null,
+            id_transaccion: null
+        },
+        {
+            id: 3,
+            paciente_first_name: "Cristian", 
+            paciente_last_name: "Pérez",
+            paciente_dni: "30123456",
+            medico_nombre: "Dr. Roberto Martínez",
+            especialidad: "Odontología",
+            fecha: "2024-12-18",
+            hora: "09:30",
+            direccion: "Av. Callao 789, CABA",
+            motivo: "Limpieza dental",
+            estado: "pendiente",
+            monto: 100,
+            fecha_pago: null,
+            id_transaccion: null
+        },
+        {
+            id: 4,
+            paciente_first_name: "Cristian", 
+            paciente_last_name: "Pérez",
+            paciente_dni: "30123456",
+            medico_nombre: "Dra. María Rodríguez",
+            especialidad: "Pediatría",
+            fecha: "2024-12-22",
+            hora: "11:00",
+            direccion: "Av. Córdoba 456, CABA",
+            motivo: "Control pediátrico",
+            estado: "pendiente",
+            monto: 100,
+            fecha_pago: null,
+            id_transaccion: null
+        },
+        {
+            id: 5,
+            paciente_first_name: "Cristian", 
+            paciente_last_name: "Pérez",
+            paciente_dni: "30123456",
+            medico_nombre: "Dr. Diego Fernández",
+            especialidad: "Clínica Médica",
+            fecha: "2024-12-25",
+            hora: "14:30",
+            direccion: "Av. Rivadavia 2345, CABA",
+            motivo: "Chequeo general",
+            estado: "pendiente",
+            monto: 100,
+            fecha_pago: null,
+            id_transaccion: null
         },
         {
             id: 3,
@@ -165,8 +215,48 @@ window.simulateAPIDelay = (ms = 500) => new Promise(resolve => setTimeout(resolv
 
 // Mock de fetch para datos de prueba
 window.mockFetch = async (url, options = {}) => {
-    console.log('🎭 Mock fetch para:', url);
+    console.log('🎭 Mock fetch para:', url, 'method:', options.method);
     await simulateAPIDelay(300);
+    
+    // ⚡ MOCK PAGOS - PRIMERA PRIORIDAD
+    // Mock para crear pago de turno (MercadoPago)
+    if (url.includes('/pagos/crear_pago_turno/')) {
+        console.log('💳 🚀 INTERCEPTADO - Mock crear pago MercadoPago');
+        console.log('💳 URL:', url);
+        console.log('💳 Method:', options.method);
+        
+        const body = options.body ? JSON.parse(options.body) : {};
+        const turnoId = body.turno_id || '1';
+        
+        // Simular respuesta exitosa con URL de nuestro simulador local
+        const mockPaymentUrl = `/pago-simulador.html?turno=${turnoId}&monto=100`;
+        
+        // Simular redirección después de un pequeño delay
+        setTimeout(() => {
+            console.log('🚀 Abriendo simulador de MercadoPago...');
+            window.open(mockPaymentUrl, '_blank');
+        }, 1000);
+        
+        return {
+            ok: true,
+            status: 200,
+            json: async () => ({
+                url_pago: mockPaymentUrl,
+                pago_id: `MOCK-${turnoId}-${Date.now()}`,
+                status: 'created'
+            })
+        };
+    }
+    
+    // Pagos mock (listar)
+    if (url.includes('/pagos/') && !url.includes('crear_pago_turno')) {
+        console.log('💳 Mock listar pagos');
+        return {
+            ok: true,
+            status: 200,
+            json: async () => []
+        };
+    }
     
     // Login mock
     if (url.includes('/auth/login/') && options.method === 'POST') {
@@ -330,6 +420,18 @@ window.mockFetch = async (url, options = {}) => {
 if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
     const originalFetch = window.fetch;
     window.fetch = async (url, options = {}) => {
+        // EXCEPCIÓN: Usar API real para TODOS los endpoints de pagos
+        if (typeof url === 'string' && (url.includes('/api/pagos/') || url.includes('pagos/') || url.includes('crear_pago_turno'))) {
+            console.log('💳 Usando API REAL para pagos:', url);
+            return originalFetch(url, options);
+        }
+        
+        // EXCEPCIÓN: Usar API real para MercadoPago
+        if (typeof url === 'string' && url.includes('mercadopago.com')) {
+            console.log('💳 Usando API REAL para MercadoPago:', url);
+            return originalFetch(url, options);
+        }
+        
         // Si es una API que queremos mockear, usar mockFetch
         if (typeof url === 'string' && url.includes('/api/')) {
             console.log('🔧 Usando mock para:', url);
@@ -340,4 +442,4 @@ if (window.location.hostname === 'localhost' || window.location.hostname === '12
     };
 }
 
-console.log('✅ Datos de prueba cargados - MOCK_DATA disponible');
+console.log('✅ Datos de prueba cargados - MOCK_DATA disponible (API REAL para pagos)');

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pago Exitoso - TurnoFacil</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f8f9fa;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+        }
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            text-align: center;
+            max-width: 500px;
+        }
+        .success-icon {
+            font-size: 64px;
+            color: #28a745;
+            margin-bottom: 20px;
+        }
+        h1 {
+            color: #28a745;
+            margin-bottom: 20px;
+        }
+        p {
+            color: #666;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+        .btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 5px;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .btn:hover {
+            background: #0056b3;
+        }
+        .info-box {
+            background: #e8f5e8;
+            border: 1px solid #28a745;
+            border-radius: 5px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="success-icon">✅</div>
+        <h1>¡Pago Exitoso!</h1>
+        <p>Tu pago ha sido procesado correctamente. Tu turno médico ha sido confirmado.</p>
+        
+        <div class="info-box">
+            <strong>🎉 ¡Felicitaciones!</strong><br>
+            Tu turno ha sido confirmado y recibirás una notificación por email con los detalles.
+        </div>
+        
+        <p>Gracias por confiar en TurnoFacil para gestionar tus citas médicas.</p>
+        
+        <a href="http://localhost:80" class="btn">Volver a TurnoFacil</a>
+    </div>
+    
+    <script>
+        // Auto-retorno después de 5 segundos
+        setTimeout(() => {
+            window.location.href = 'http://localhost:80';
+        }, 5000);
+    </script>
+</body>
+</html>

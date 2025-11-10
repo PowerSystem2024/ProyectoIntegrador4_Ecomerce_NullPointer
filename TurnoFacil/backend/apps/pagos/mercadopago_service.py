@@ -16,16 +16,17 @@ class MercadoPagoService:
                 }
             ],
             "back_urls": {
-                "success": f"{settings.FRONTEND_URL}/pago-exitoso",
-                "failure": f"{settings.FRONTEND_URL}/pago-fallido",
-                "pending": f"{settings.FRONTEND_URL}/pago-pendiente"
+                "success": "http://localhost/pago-exitoso.html",
+                "failure": "http://localhost/pago-fallido.html", 
+                "pending": "http://localhost/pago-pendiente.html"
             },
-            "auto_return": "approved",
             "external_reference": str(turno_id),
-            "notification_url": f"{settings.BACKEND_URL}/api/pagos/webhook_mercadopago/",
+            "statement_descriptor": "TurnoFacil"
         }
 
+        print(f"🔍 Enviando preferencia a MercadoPago: {preference_data}")
         preference_response = self.sdk.preference().create(preference_data)
+        print(f"🔍 Respuesta completa de MercadoPago: {preference_response}")
         return preference_response
 
     def verificar_pago(self, payment_id):

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pago Pendiente - TurnoFacil</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f8f9fa;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+        }
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            text-align: center;
+            max-width: 500px;
+        }
+        .pending-icon {
+            font-size: 64px;
+            color: #ffc107;
+            margin-bottom: 20px;
+        }
+        h1 {
+            color: #ffc107;
+            margin-bottom: 20px;
+        }
+        p {
+            color: #666;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+        .btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 5px;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s;
+            margin: 10px;
+        }
+        .btn:hover {
+            background: #0056b3;
+        }
+        .info-box {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            border-radius: 5px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #ffc107;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 1s ease-in-out infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="pending-icon">⏳</div>
+        <h1>Pago Pendiente</h1>
+        <p>Tu pago está siendo procesado. <span class="loading"></span></p>
+        
+        <div class="info-box">
+            <strong>⏱️ Estado del pago:</strong><br>
+            Estamos esperando la confirmación del medio de pago.<br>
+            Esto puede tardar unos minutos.
+        </div>
+        
+        <p>Te enviaremos una confirmación por email una vez que el pago sea aprobado.</p>
+        
+        <a href="http://localhost:80" class="btn">Volver a TurnoFacil</a>
+        
+        <script>
+            // Auto-refresh cada 30 segundos para verificar estado
+            setTimeout(() => {
+                window.location.reload();
+            }, 30000);
+            
+            console.log('Pago pendiente - Auto-refresh en 30 segundos');
+        </script>
+    </div>
+</body>
+</html>

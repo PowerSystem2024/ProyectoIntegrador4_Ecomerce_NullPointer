@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MercadoPago - Simulador de Pago</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            background: #f8f9fa;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .payment-container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            max-width: 400px;
+            width: 100%;
+        }
+        
+        .mp-logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .mp-logo h1 {
+            color: #009ee3;
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+        
+        .amount {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .amount h2 {
+            color: #333;
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+        
+        .item-info {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+            font-weight: 500;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        input:focus, select:focus {
+            outline: none;
+            border-color: #009ee3;
+        }
+        
+        .card-row {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .card-row .form-group {
+            flex: 1;
+        }
+        
+        .pay-btn {
+            width: 100%;
+            background: #009ee3;
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-bottom: 15px;
+            transition: background 0.3s;
+        }
+        
+        .pay-btn:hover {
+            background: #007bb8;
+        }
+        
+        .cancel-btn {
+            width: 100%;
+            background: transparent;
+            color: #666;
+            border: 1px solid #ddd;
+            padding: 12px;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .cancel-btn:hover {
+            background: #f8f9fa;
+        }
+        
+        .success-container {
+            text-align: center;
+            display: none;
+        }
+        
+        .success-container.show {
+            display: block;
+        }
+        
+        .success-icon {
+            font-size: 64px;
+            color: #28a745;
+            margin-bottom: 20px;
+        }
+        
+        .security-info {
+            margin-top: 20px;
+            padding: 15px;
+            background: #e8f5e8;
+            border-left: 4px solid #28a745;
+            border-radius: 4px;
+        }
+        
+        .security-info small {
+            color: #155724;
+        }
+    </style>
+</head>
+<body>
+    <div class="payment-container">
+        <div id="payment-form">
+            <div class="mp-logo">
+                <h1>💳 MercadoPago</h1>
+                <p style="color: #666;">Simulador de Pago - Turno Fácil</p>
+            </div>
+            
+            <div class="amount">
+                <h2>$100.00</h2>
+                <p style="color: #666;">Pesos Argentinos</p>
+            </div>
+            
+            <div class="item-info">
+                <strong>📋 Turno Médico</strong>
+                <p style="color: #666; margin-top: 5px;">Consulta médica - TurnoFacil</p>
+            </div>
+            
+            <div class="form-group">
+                <label>💳 Número de tarjeta</label>
+                <input type="text" id="card-number" placeholder="4509 9535 6623 3704" maxlength="19">
+            </div>
+            
+            <div class="card-row">
+                <div class="form-group">
+                    <label>📅 Vencimiento</label>
+                    <input type="text" id="expiry" placeholder="MM/AA" maxlength="5">
+                </div>
+                <div class="form-group">
+                    <label>🔒 CVV</label>
+                    <input type="text" id="cvv" placeholder="123" maxlength="3">
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>👤 Nombre del titular</label>
+                <input type="text" id="card-name" placeholder="JUAN PEREZ">
+            </div>
+            
+            <div class="form-group">
+                <label>🏦 Cuotas</label>
+                <select id="installments">
+                    <option value="1">1 cuota de $100.00 sin interés</option>
+                    <option value="3">3 cuotas de $33.33 sin interés</option>
+                    <option value="6">6 cuotas de $16.67 sin interés</option>
+                </select>
+            </div>
+            
+            <button class="pay-btn" onclick="processPayment()">
+                🚀 Pagar $100.00
+            </button>
+            
+            <button class="cancel-btn" onclick="cancelPayment()">
+                ❌ Cancelar pago
+            </button>
+            
+            <div class="security-info">
+                <small>🔒 Tu pago está protegido con encriptación SSL. Este es un simulador para pruebas.</small>
+            </div>
+        </div>
+        
+        <div id="success-container" class="success-container">
+            <div class="success-icon">✅</div>
+            <h2 style="color: #28a745; margin-bottom: 20px;">¡Pago exitoso!</h2>
+            <p style="color: #666; margin-bottom: 30px;">Tu turno médico ha sido confirmado y pagado.</p>
+            
+            <div style="background: #f8f9fa; padding: 20px; border-radius: 5px; margin-bottom: 20px;">
+                <p><strong>💰 Monto pagado:</strong> $100.00</p>
+                <p><strong>🏥 Concepto:</strong> Consulta médica</p>
+                <p><strong>📝 ID de transacción:</strong> <span id="transaction-id"></span></p>
+            </div>
+            
+            <button class="pay-btn" onclick="returnToSite()">
+                🏠 Volver a TurnoFacil
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Auto-completar con datos de prueba
+        document.getElementById('card-number').value = '4509 9535 6623 3704';
+        document.getElementById('expiry').value = '11/25';
+        document.getElementById('cvv').value = '123';
+        document.getElementById('card-name').value = 'APRO APRO';
+        
+        // Formatear número de tarjeta
+        document.getElementById('card-number').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
+            let formattedValue = value.match(/.{1,4}/g)?.join(' ') || value;
+            e.target.value = formattedValue;
+        });
+        
+        // Formatear fecha de vencimiento
+        document.getElementById('expiry').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length >= 2) {
+                value = value.substring(0,2) + '/' + value.substring(2,4);
+            }
+            e.target.value = value;
+        });
+        
+        function processPayment() {
+            // Simular proceso de pago
+            const payBtn = document.querySelector('.pay-btn');
+            payBtn.innerHTML = '⏳ Procesando pago...';
+            payBtn.disabled = true;
+            
+            setTimeout(() => {
+                // Generar ID de transacción
+                const transactionId = 'MP-' + Date.now() + '-SIM';
+                document.getElementById('transaction-id').textContent = transactionId;
+                
+                // Mostrar pantalla de éxito
+                document.getElementById('payment-form').style.display = 'none';
+                document.getElementById('success-container').classList.add('show');
+                
+                // Simular retorno automático después de 3 segundos
+                setTimeout(() => {
+                    returnToSite();
+                }, 3000);
+                
+            }, 2000);
+        }
+        
+        function cancelPayment() {
+            if (confirm('¿Estás seguro que deseas cancelar el pago?')) {
+                window.close();
+                // Si no puede cerrar la ventana, redirigir
+                setTimeout(() => {
+                    window.location.href = 'http://localhost:80';
+                }, 100);
+            }
+        }
+        
+        function returnToSite() {
+            // Cerrar ventana o redirigir
+            if (window.opener) {
+                window.close();
+            } else {
+                window.location.href = 'http://localhost:80';
+            }
+        }
+        
+        // Detectar si la página se está cerrando
+        window.addEventListener('beforeunload', function() {
+            if (window.opener && typeof window.opener.paymentCompleted === 'function') {
+                window.opener.paymentCompleted();
+            }
+        });
+    </script>
+</body>
+</html>
