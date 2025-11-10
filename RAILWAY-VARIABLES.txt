@@ -1,0 +1,19 @@
+🔐 VARIABLES PARA RAILWAY
+=========================
+
+Copia y pega estas variables en Railway (pestaña Variables):
+
+DEBUG=False
+SECRET_KEY=django-production-turnofacil-railway-2024-secret
+RAILWAY_ENVIRONMENT_NAME=production
+DATABASE_URL=${{Postgres.DATABASE_URL}}
+ALLOWED_HOSTS=*.railway.app
+CORS_ALLOW_ALL_ORIGINS=True
+
+📝 VARIABLES OPCIONALES DE MERCADOPAGO:
+MERCADOPAGO_ACCESS_TOKEN=APP_USR-4443132160940317-110913-d124666811020fa637f8889cdc59e5ca-2705622945
+MERCADOPAGO_PUBLIC_KEY=APP_USR-aaf87840-bb69-4343-8b1e-f8a49c92a770
+
+⚠️  IMPORTANTE: 
+- DATABASE_URL debe escribirse exactamente como: ${{Postgres.DATABASE_URL}}
+- Railway reemplazará automáticamente esta referencia con la URL real de tu base de datos

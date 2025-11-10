@@ -12,6 +12,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY TurnoFacil/backend/ .
 
+# Copiar frontend al directorio static
+COPY TurnoFacil/fronted/ /app/static/
+
 RUN mkdir -p /app/staticfiles
 
 ENV DJANGO_SETTINGS_MODULE=turno_facil.settings
