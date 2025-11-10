@@ -16,21 +16,24 @@ RUN apt-get update && apt-get install -y \
 # Crear directorio de trabajo
 WORKDIR /app
 
-# Copiar requirements e instalar dependencias Python
-COPY requirements.txt .
+# Copiar backend requirements e instalar dependencias Python
+COPY backend/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copiar código de la aplicación
-COPY . .
+# Copiar solo el código del backend
+COPY backend/ .
 
 # Crear directorio para archivos estáticos
 RUN mkdir -p /app/staticfiles
+
+# Copiar frontend al directorio static para servir
+COPY fronted/ /app/static/
 
 # Recopilar archivos estáticos
 RUN python manage.py collectstatic --noinput || echo "Collectstatic failed, continuing..."
 
 # Exponer puerto (Railway asigna automáticamente)
-EXPOSE 8000
+EXPOSE $PORT
 
 # Comando de inicio para Railway
 CMD ["sh", "-c", "python manage.py migrate --noinput && python manage.py runserver 0.0.0.0:$PORT"]
