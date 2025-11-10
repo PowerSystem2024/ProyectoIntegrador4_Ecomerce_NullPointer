@@ -18,21 +18,33 @@ def set_csrf(request):
 
 
 def frontend_view(request):
-    """Serve the frontend HTML"""
-    # Buscar el archivo index.html en el frontend
+    """Serve the frontend HTML with corrected paths"""
     frontend_path = os.path.join(settings.BASE_DIR, '../fronted/index.html')
     try:
         with open(frontend_path, 'r', encoding='utf-8') as f:
             content = f.read()
+        
+        # Obtener base URL del request
+        base_url = request.build_absolute_uri('/')
+        
         # Reemplazar URLs de desarrollo con URLs de producción
-        content = content.replace('http://localhost:8000', request.build_absolute_uri('/'))
-        content = content.replace('http://localhost', request.build_absolute_uri('/'))
+        content = content.replace('http://localhost:8000/api', f'{base_url}api')
+        content = content.replace('http://localhost:8000', base_url)
+        content = content.replace('http://localhost/api', f'{base_url}api')
+        content = content.replace('http://localhost', base_url)
+        
+        # Asegurar que las rutas de CSS y JS sean relativas/absolutas correctas
+        content = content.replace('href="css/', f'href="{base_url}css/')
+        content = content.replace('src="js/', f'src="{base_url}js/')
+        content = content.replace('src="assets/', f'src="{base_url}assets/')
+        
         from django.http import HttpResponse
         return HttpResponse(content, content_type='text/html')
+        
     except FileNotFoundError:
         return JsonResponse({
             "message": "Turno Fácil API",
-            "version": "1.0.0",
+            "version": "1.0.0", 
             "status": "running",
             "note": "Frontend not found. API endpoints available below.",
             "endpoints": {
@@ -74,5 +86,9 @@ urlpatterns = [
     path('', frontend_view, name='frontend'),  # Servir frontend en la raíz
 ]
 
-if settings.DEBUG:
+# Servir archivos estáticos y media en producción
+if not settings.DEBUG or True:  # Siempre servir en producción
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    urlpatterns += static('/css/', document_root=os.path.join(settings.BASE_DIR, '../fronted/css'))
+    urlpatterns += static('/js/', document_root=os.path.join(settings.BASE_DIR, '../fronted/js'))
+    urlpatterns += static('/assets/', document_root=os.path.join(settings.BASE_DIR, '../fronted/assets'))
