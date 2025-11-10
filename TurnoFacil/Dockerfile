@@ -25,9 +25,6 @@ COPY backend/ .
 # Crear directorio para archivos estáticos
 RUN mkdir -p /app/staticfiles
 
-# Copiar frontend al directorio static para servir
-COPY fronted/ /app/static/
-
 # Configurar variable de entorno de Django
 ENV DJANGO_SETTINGS_MODULE=turno_facil.settings
 
