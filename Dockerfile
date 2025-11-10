@@ -25,13 +25,10 @@ COPY TurnoFacil/backend/ .
 # Crear directorio para archivos estáticos
 RUN mkdir -p /app/staticfiles
 
-# Copiar frontend al directorio static para servir
-COPY TurnoFacil/fronted/ /app/static/
-
 # Configurar variable de entorno de Django
 ENV DJANGO_SETTINGS_MODULE=turno_facil.settings
 
-# Recopilar archivos estáticos
+# Recopilar archivos estáticos (sin el frontend por ahora)
 RUN python manage.py collectstatic --noinput --clear || echo "Collectstatic failed, continuing..."
 
 # Exponer puerto (Railway asigna automáticamente)
