@@ -28,8 +28,12 @@ def frontend_view(request):
         with open(frontend_path, 'r', encoding='utf-8') as f:
             content = f.read()
         
-        # Obtener base URL del request
+        # Obtener base URL del request y forzar HTTPS en producción
         base_url = request.build_absolute_uri('/').rstrip('/')
+        
+        # Forzar HTTPS en producción (Railway)
+        if 'railway.app' in base_url or not settings.DEBUG:
+            base_url = base_url.replace('http://', 'https://')
         
         # Reemplazar URLs de desarrollo con URLs de producción
         content = content.replace('http://localhost:8000/api', f'{base_url}/api')
@@ -37,7 +41,7 @@ def frontend_view(request):
         content = content.replace('http://localhost/api', f'{base_url}/api')
         content = content.replace('http://localhost', base_url)
         
-        # Usar URLs de archivos estáticos de Django
+        # Usar URLs de archivos estáticos de Django con HTTPS
         content = content.replace('href="css/', f'href="{base_url}/static/css/')
         content = content.replace('src="js/', f'src="{base_url}/static/js/')
         content = content.replace('src="assets/', f'src="{base_url}/static/assets/')

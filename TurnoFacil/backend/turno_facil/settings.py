@@ -21,6 +21,10 @@ ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
 # Para Railway - permitir todos los hosts en producción
 if not DEBUG:
     ALLOWED_HOSTS = ['*']
+    # Configuración HTTPS para Railway
+    SECURE_SSL_REDIRECT = True
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    USE_TLS = True
 
 INSTALLED_APPS = [
     'django.contrib.admin',
