@@ -1,0 +1,11 @@
+Django==4.2.7
+djangorestframework==3.14.0
+django-cors-headers==4.3.1
+mercadopago>=2.0.0
+reportlab==4.0.4
+python-dateutil==2.8.2
+python-dotenv==1.0.0
+gunicorn==21.2.0
+whitenoise==6.6.0
+psycopg2-binary==2.9.7
+dj-database-url==2.1.0
