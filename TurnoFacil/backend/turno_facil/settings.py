@@ -79,11 +79,16 @@ WSGI_APPLICATION = 'turno_facil.wsgi.application'
 
 # Database configuration
 # Use PostgreSQL if DATABASE_URL is set (Docker environment) or if PostgreSQL environment variables are available
-if os.getenv('DATABASE_URL'):
+DATABASE_URL = os.getenv('DATABASE_URL')
+print(f"DEBUG: DATABASE_URL is set: {bool(DATABASE_URL)}")
+print(f"DEBUG: DATABASE_URL (first 20 chars): {DATABASE_URL[:20] if DATABASE_URL else 'None'}")
+
+if DATABASE_URL:
     import dj_database_url
     DATABASES = {
         'default': dj_database_url.config(conn_max_age=600, ssl_require=False)
     }
+    print(f"DEBUG: Using dj_database_url configuration")
 elif all([os.getenv('POSTGRES_DB'), os.getenv('POSTGRES_USER'), os.getenv('POSTGRES_PASSWORD')]):
     DATABASES = {
         'default': {
@@ -95,6 +100,7 @@ elif all([os.getenv('POSTGRES_DB'), os.getenv('POSTGRES_USER'), os.getenv('POSTG
             'PORT': os.getenv('DB_PORT', '5432'),
         }
     }
+    print(f"DEBUG: Using individual PostgreSQL environment variables")
 else:
     # Fallback to SQLite for local development
     DATABASES = {
@@ -103,6 +109,7 @@ else:
             'NAME': BASE_DIR / 'db.sqlite3',
         }
     }
+    print(f"DEBUG: Falling back to SQLite")
 
 AUTH_PASSWORD_VALIDATORS = [
     {

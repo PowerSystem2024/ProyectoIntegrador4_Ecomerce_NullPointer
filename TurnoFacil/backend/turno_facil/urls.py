@@ -81,7 +81,8 @@ def api_root(request):
             "pagos": "/api/pagos/",
             "historiales": "/api/historiales/",
             "csrf": "/api/auth/csrf/",
-            "debug_static": "/api/debug-static/"
+            "debug_static": "/api/debug-static/",
+            "debug_database": "/api/debug-database/"
         },
         "frontend_url": request.build_absolute_uri('/')
     })
@@ -126,6 +127,38 @@ def debug_static_files(request):
     
     return JsonResponse(debug_info, indent=2)
 
+
+def debug_database(request):
+    """Debug endpoint to check database connection"""
+    from django.db import connection
+    from django.core.exceptions import ImproperlyConfigured
+    
+    debug_info = {
+        "database_config": dict(settings.DATABASES['default']),
+        "database_url_set": bool(os.getenv('DATABASE_URL')),
+        "database_url_preview": os.getenv('DATABASE_URL', '')[:50] + "..." if os.getenv('DATABASE_URL') else None,
+        "railway_env": os.getenv('RAILWAY_ENVIRONMENT_NAME'),
+        "debug_mode": settings.DEBUG,
+    }
+    
+    # Remover password del debug por seguridad
+    if 'PASSWORD' in debug_info["database_config"]:
+        debug_info["database_config"]['PASSWORD'] = '***HIDDEN***'
+    
+    try:
+        # Intentar conectar a la base de datos
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT 1")
+            debug_info["database_connection"] = "SUCCESS"
+            cursor.execute("SELECT version()")
+            version = cursor.fetchone()
+            debug_info["database_version"] = version[0] if version else "Unknown"
+    except Exception as e:
+        debug_info["database_connection"] = "FAILED"
+        debug_info["database_error"] = str(e)
+    
+    return JsonResponse(debug_info, indent=2)
+
 urlpatterns = [
     path('admin/', admin.site.urls),  
     path('api/auth/', include('apps.pacientes.urls')),  
@@ -135,6 +168,7 @@ urlpatterns = [
     path('api/', api_root, name='api_root'),
     path('api/auth/csrf/', set_csrf),
     path('api/debug-static/', debug_static_files, name='debug_static'),
+    path('api/debug-database/', debug_database, name='debug_database'),
     path('', frontend_view, name='frontend'),  
 ]
 
