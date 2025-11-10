@@ -76,10 +76,51 @@ def api_root(request):
             "turnos": "/api/turnos/",
             "pagos": "/api/pagos/",
             "historiales": "/api/historiales/",
-            "csrf": "/api/auth/csrf/"
+            "csrf": "/api/auth/csrf/",
+            "debug_static": "/api/debug-static/"
         },
         "frontend_url": request.build_absolute_uri('/')
     })
+
+
+def debug_static_files(request):
+    """Debug endpoint to check static files"""
+    import os
+    static_dir = os.path.join(settings.BASE_DIR, 'static')
+    staticfiles_dir = os.path.join(settings.BASE_DIR, 'staticfiles')
+    
+    debug_info = {
+        "static_url": settings.STATIC_URL,
+        "static_root": str(settings.STATIC_ROOT),
+        "staticfiles_dirs": [str(d) for d in settings.STATICFILES_DIRS],
+        "base_dir": str(settings.BASE_DIR),
+        "static_dir_exists": os.path.exists(static_dir),
+        "staticfiles_dir_exists": os.path.exists(staticfiles_dir),
+    }
+    
+    # Listar archivos en directorio static
+    if os.path.exists(static_dir):
+        try:
+            debug_info["static_files"] = []
+            for root, dirs, files in os.walk(static_dir):
+                for file in files:
+                    rel_path = os.path.relpath(os.path.join(root, file), static_dir)
+                    debug_info["static_files"].append(rel_path)
+        except Exception as e:
+            debug_info["static_files_error"] = str(e)
+    
+    # Listar archivos en directorio staticfiles
+    if os.path.exists(staticfiles_dir):
+        try:
+            debug_info["staticfiles_collected"] = []
+            for root, dirs, files in os.walk(staticfiles_dir):
+                for file in files:
+                    rel_path = os.path.relpath(os.path.join(root, file), staticfiles_dir)
+                    debug_info["staticfiles_collected"].append(rel_path)
+        except Exception as e:
+            debug_info["staticfiles_collected_error"] = str(e)
+    
+    return JsonResponse(debug_info, indent=2)
 
 urlpatterns = [
     path('admin/', admin.site.urls),  
@@ -89,6 +130,7 @@ urlpatterns = [
     path('api/historiales/', include('apps.historiales.urls')),
     path('api/', api_root, name='api_root'),
     path('api/auth/csrf/', set_csrf),
+    path('api/debug-static/', debug_static_files, name='debug_static'),
     path('', frontend_view, name='frontend'),  
 ]
 
